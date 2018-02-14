@@ -53,8 +53,17 @@ class Platoon:
             out += '\nHQ: ' + str(self.hq.keys())
         if len(self.infantry_squads):
             out += '\nSquads: ' + str(self.infantry_squads.keys())
+        out += '\nPoints: ' + str(self.points())
         return out
 
+
+    def points(self):
+        points = 0
+        for hq in self.hq.values():
+            points += hq.cost
+        for squad in self.infantry_squads.values():
+            points += squad.cost
+        return points
 
     def add_hq(self, name, quality, officer_cost, soldiers, soldier_cost):
         self.hq[name] = self.HQ(quality, officer_cost, soldiers, soldier_cost)
