@@ -13,6 +13,7 @@ class Platoon:
     class Infantry_Unit:
 
         def __init__(self, quality):
+            self.destroyed = False
             self.officer = True
             self.pins = 0
             self.quality = quality
@@ -49,6 +50,7 @@ class Platoon:
         self.name = name
         self.infantry_squads = {}
         self.hq = {}
+        self.victory_points = 0
 
 
     def __str__(self):
