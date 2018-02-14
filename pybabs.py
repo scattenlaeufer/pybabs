@@ -11,33 +11,37 @@ class UnitTooSmallException(Exception):
 class Platoon:
 
     class Infantry_Unit:
-        pass
+
+        def __init__(self, quality):
+            self.officer = True
+            self.pins = 0
+            self.quality = quality
 
 
     class Infantry_Squad(Infantry_Unit):
 
         def __init__(self, quality, miniatur_cost, size, min_size, max_size):
-            self.nco = True
-            self.quality = quality
+            super(Platoon.Infantry_Squad, self).__init__(quality)
             if min_size <= size <= max_size:
                 self.size = size
             elif size < min_size:
                 raise(UnitTooSmallException)
             else:
                 raise(UnitTooBigException)
+            self.initial_size = self.size
             self.cost = size * miniatur_cost
 
 
     class HQ(Infantry_Unit):
 
         def __init__(self, quality, officer_cost, soldiers, soldier_cost):
-            self.officer = True
-            self.quality = quality
+            super(Platoon.HQ, self).__init__(quality)
             if soldiers < 0:
                 raise(UnitTooSmallException)
             elif soldiers > 2:
                 raise(UnitTooBigException)
             self.size = 1 + soldiers
+            self.initial_size = self.size
             self.cost = officer_cost + soldiers * soldier_cost
 
 
@@ -76,4 +80,5 @@ class Platoon:
 platoon = Platoon('Platoon 1')
 platoon.add_hq('First Lieutenant', 'Veteran', 90, 2, 13)
 platoon.add_infantry_squad('1st Squad', 'Veteran', 13, 10, 5, 10)
+platoon.add_infantry_squad('2nd Squad', 'Veteran', 13, 10, 5, 10)
 print(platoon)
