@@ -61,17 +61,17 @@ class Platoon:
         self.victory_points = 0
 
     def __str__(self):
-        format_string = '\n{:<20} | {:<13} | {:<5} | {:>4} | {:<7} | {:<10} | {:>6}'
+        format_string = '\n{:<20} | {:<13} | {:<5} | {:>4} | {:<7} | {:<10} | {:<9} | {:>6}'
         out = '= ' + self.name + ' ='
-        out += format_string.format('name', 'quality', 'size', 'pins', 'officer', 'last order', 'points')
+        out += format_string.format('name', 'quality', 'size', 'pins', 'officer', 'last order', 'destroyed', 'points')
         if len(self.hq):
             for name, unit in self.hq.items():
                 out += format_string.format(name, unit.quality, unit.str_size(), unit.pins, str(unit.officer),
-                                            str(unit.order), unit.cost)
+                                            str(unit.order), str(unit.destroyed), unit.cost)
         if len(self.infantry_squads):
             for name, unit in self.infantry_squads.items():
                 out += format_string.format(name, unit.quality, unit.str_size(), unit.pins, str(unit.officer),
-                                            str(unit.order), unit.cost)
+                                            str(unit.order), str(unit.destroyed), unit.cost)
         out += '\nPoints: ' + str(self.points())
         return out
 
