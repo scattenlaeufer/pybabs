@@ -18,10 +18,12 @@ class Platoon:
 
     class Infantry_Unit:
 
-        def __init__(self, quality):
+        def __init__(self, name, platoon, quality):
             self.destroyed = False
             self.officer = True
             self.pins = 0
+            self.name = name
+            self.platoon = platoon
             if quality in ['Inexperienced', 'Regular', 'Veteran']:
                 self.quality = quality
             else:
@@ -61,8 +63,8 @@ class Platoon:
 
     class Infantry_Squad(Infantry_Unit):
 
-        def __init__(self, quality, miniatur_cost, size, min_size, max_size):
-            super(Platoon.Infantry_Squad, self).__init__(quality)
+        def __init__(self, name, platoon, quality, miniatur_cost, size, min_size, max_size):
+            super(Platoon.Infantry_Squad, self).__init__(name, platoon, quality)
             if min_size <= size <= max_size:
                 self.size = size
             elif size < min_size:
@@ -74,8 +76,8 @@ class Platoon:
 
     class HQ(Infantry_Unit):
 
-        def __init__(self,  quality, officer_cost, soldiers, soldier_cost):
-            super(Platoon.HQ, self).__init__(quality)
+        def __init__(self,  name, platoon, quality, officer_cost, soldiers, soldier_cost):
+            super(Platoon.HQ, self).__init__(name, platoon, quality)
             if soldiers < 0:
                 raise(UnitTooSmallException)
             elif soldiers > 2:
@@ -114,10 +116,11 @@ class Platoon:
         return points
 
     def add_hq(self, name, quality, officer_cost, soldiers, soldier_cost):
-        self.hq[name] = self.HQ(quality, officer_cost, soldiers, soldier_cost)
+        self.hq[name] = self.HQ(name, self.name, quality, officer_cost, soldiers, soldier_cost)
 
     def add_infantry_squad(self, name, quality, miniature_cost, size, min_size, max_size):
-        self.infantry_squads[name] = self.Infantry_Squad(quality, miniature_cost, size, min_size, max_size)
+        self.infantry_squads[name] = self.Infantry_Squad(name, self.name, quality, miniature_cost, size, min_size,
+                                                         max_size)
 
 
 platoon1 = Platoon('Platoon 1')
