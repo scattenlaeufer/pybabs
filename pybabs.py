@@ -73,8 +73,14 @@ class Platoon:
         self.infantry_squads[name] = self.Infantry_Squad(quality, miniature_cost, size, min_size, max_size)
 
 
-platoon = Platoon('Platoon 1')
-platoon.add_hq('First Lieutenant', 'Veteran', 90, 2, 13)
-platoon.add_infantry_squad('1st Squad', 'Veteran', 13, 10, 5, 10)
-platoon.add_infantry_squad('2nd Squad', 'Veteran', 13, 10, 5, 10)
-print(platoon)
+platoon1 = Platoon('Platoon 1')
+platoon1.add_hq('First Lieutenant', 'Veteran', 90, 2, 13)
+platoon1.add_infantry_squad('1st Squad', 'Veteran', 13, 10, 5, 10)
+platoon1.add_infantry_squad('2nd Squad', 'Veteran', 13, 10, 5, 10)
+print(platoon1)
+
+platoon2 = Platoon('Platoon 2')
+platoon2.add_hq('First Lieutenant', 'Veteran', 90, 2, 13)
+platoon2.add_infantry_squad('1st Squad', 'Veteran', 13, 10, 5, 10)
+platoon2.add_infantry_squad('2nd Squad', 'Veteran', 13, 10, 5, 10)
+print(platoon2)
