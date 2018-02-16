@@ -33,7 +33,7 @@ class Platoon:
         def str_size(self):
             return '{:>2}/{:>2}'.format(self.size, self.initial_size)
 
-        def fire(self, unit):
+        def fire(self, unit, verbose=False):
             self.order = 'fire'
             dificulty = 3 + self.pins
             hits = 0
@@ -44,9 +44,15 @@ class Platoon:
                     hits += 1
             if hits > 0:
                 kills = unit.wound(hits)
-                print(str(hits) + ' hits -> ' + str(kills) + ' kills')
-            else:
-                print('0 hits')
+            if verbose:
+                out = self.platoon + ' ' + self.name + ' shoots at ' + unit.platoon + ' ' + unit.name + ': '
+                if hits > 0:
+                    out += str(hits) + ' hits -> ' + str(kills) + ' kills'
+                    if unit.destroyed:
+                        out += ', unit destroyed!'
+                else:
+                    out += '0 hits'
+                print(out)
 
         def wound(self, hits):
             self.pins += 1
@@ -138,7 +144,7 @@ print(platoon2)
 print('')
 
 while not platoon2.infantry_squads['1st Squad'].destroyed:
-    platoon1.infantry_squads['1st Squad'].fire(platoon2.infantry_squads['1st Squad'])
+    platoon1.infantry_squads['1st Squad'].fire(platoon2.infantry_squads['1st Squad'], True)
 
 print('')
 # print('\n==========\n')
