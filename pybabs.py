@@ -8,6 +8,10 @@ class UnitTooSmallException(Exception):
     pass
 
 
+class WrongUnitQuality(Exception):
+    pass
+
+
 class Platoon:
 
     class Infantry_Unit:
@@ -16,7 +20,10 @@ class Platoon:
             self.destroyed = False
             self.officer = True
             self.pins = 0
-            self.quality = quality
+            if quality in ['Inexperienced', 'Regular', 'Veteran']:
+                self.quality = quality
+            else:
+                raise WrongUnitQuality
             self.order = None
 
         def str_size(self):
