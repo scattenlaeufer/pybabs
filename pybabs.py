@@ -17,6 +17,10 @@ class Platoon:
             self.officer = True
             self.pins = 0
             self.quality = quality
+            self.order = None
+
+        def str_size(self):
+            return '{:>2}/{:>2}'.format(self.size, self.initial_size)
 
     class Infantry_Squad(Infantry_Unit):
 
@@ -33,7 +37,7 @@ class Platoon:
 
     class HQ(Infantry_Unit):
 
-        def __init__(self, quality, officer_cost, soldiers, soldier_cost):
+        def __init__(self,  quality, officer_cost, soldiers, soldier_cost):
             super(Platoon.HQ, self).__init__(quality)
             if soldiers < 0:
                 raise(UnitTooSmallException)
@@ -50,11 +54,17 @@ class Platoon:
         self.victory_points = 0
 
     def __str__(self):
+        format_string = '\n{:<20} | {:<5} | {:>4} | {:<7} | {:<10} | {:>6}'
         out = '= ' + self.name + ' ='
+        out += format_string.format('name', 'size', 'pins', 'officer', 'last order', 'points')
         if len(self.hq):
-            out += '\nHQ: ' + str(self.hq.keys())
+            for name, unit in self.hq.items():
+                out += format_string.format(name, unit.str_size(), unit.pins, str(unit.officer), str(unit.order),
+                                            unit.cost)
         if len(self.infantry_squads):
-            out += '\nSquads: ' + str(self.infantry_squads.keys())
+            for name, unit in self.infantry_squads.items():
+                out += format_string.format(name, unit.str_size(), unit.pins, str(unit.officer), str(unit.order),
+                                            unit.cost)
         out += '\nPoints: ' + str(self.points())
         return out
 
@@ -79,6 +89,7 @@ platoon1.add_infantry_squad('1st Squad', 'Veteran', 13, 10, 5, 10)
 platoon1.add_infantry_squad('2nd Squad', 'Veteran', 13, 10, 5, 10)
 print(platoon1)
 
+print('')
 platoon2 = Platoon('Platoon 2')
 platoon2.add_hq('First Lieutenant', 'Veteran', 90, 2, 13)
 platoon2.add_infantry_squad('1st Squad', 'Veteran', 13, 10, 5, 10)
