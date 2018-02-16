@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+from random import randint
+
 class UnitTooBigException(Exception):
     pass
 
@@ -28,6 +30,34 @@ class Platoon:
 
         def str_size(self):
             return '{:>2}/{:>2}'.format(self.size, self.initial_size)
+
+        def fire(self, unit):
+            self.order = 'fire'
+            dificulty = 3 + self.pins
+            hits = 0
+            for i in range(self.size):
+                if dificulty <= 6 and randint(1, 7) >= dificulty:
+                    hits += 1
+                elif randint(1, 7) == 6 and randint(1, 7) == 6:
+                    hits += 1
+            if hits > 0:
+                kills = unit.wound(hits)
+                print(str(hits) + ' hits -> ' + str(kills) + ' kills')
+            else:
+                print('0 hits')
+
+        def wound(self, hits):
+            self.pins += 1
+            kills = 0
+            for i in range(hits):
+                roll = randint(1, 7)
+                if (self.quality == 'Inexperienced' and roll >= 3) or (self.quality == 'Regular' and roll >= 4) or (self.quality == 'Veteran' and roll >= 5):
+                    self.size -= 1
+                    kills += 1
+                    if self.size == 0:
+                        self.destroyed = True
+                        return kills
+            return kills
 
     class Infantry_Squad(Infantry_Unit):
 
@@ -94,11 +124,21 @@ platoon1 = Platoon('Platoon 1')
 platoon1.add_hq('First Lieutenant', 'Veteran', 90, 2, 13)
 platoon1.add_infantry_squad('1st Squad', 'Veteran', 13, 10, 5, 10)
 platoon1.add_infantry_squad('2nd Squad', 'Veteran', 13, 10, 5, 10)
-print(platoon1)
-
-print('')
 platoon2 = Platoon('Platoon 2')
 platoon2.add_hq('First Lieutenant', 'Veteran', 90, 2, 13)
 platoon2.add_infantry_squad('1st Squad', 'Veteran', 13, 10, 5, 10)
 platoon2.add_infantry_squad('2nd Squad', 'Veteran', 13, 10, 5, 10)
+
+print(platoon1)
+print('')
+print(platoon2)
+print('')
+
+while not platoon2.infantry_squads['1st Squad'].destroyed:
+    platoon1.infantry_squads['1st Squad'].fire(platoon2.infantry_squads['1st Squad'])
+
+print('')
+# print('\n==========\n')
+print(platoon1)
+print('')
 print(platoon2)
