@@ -53,13 +53,13 @@ class Platoon:
                 elif randint(1, 6) == 6 and randint(1, 6) == 6:
                     hits += 1
             if hits > 0:
-                kills, exceptional_demage, moral_check = unit.wound(hits)
+                kills, exceptional_damage, moral_check = unit.wound(hits)
             if verbose:
                 out = self.platoon + ' ' + self.name + ' shoots at ' + unit.platoon + ' ' + unit.name + ': '
                 if hits > 0:
                     out += str(hits) + ' hits -> ' + str(kills) + ' kills'
-                    if exceptional_demage > 0:
-                        out += ' & ' + str(exceptional_demage) + ' exceptional demage scored'
+                    if exceptional_damage > 0:
+                        out += ' & ' + str(exceptional_damage) + ' exceptional damage scored'
                     if moral_check == 1:
                         out += ', moral check succeeded'
                     elif moral_check == -1:
@@ -89,13 +89,13 @@ class Platoon:
             self.pins += 1
             start_size = self.size
             kills = 0
-            exceptional_demage = 0
+            exceptional_damage = 0
             moral_check = 0
             for i in range(hits):
                 roll = randint(1, 6)
                 if roll >= self.wound_base:
                     if (roll == 6 and randint(1, 6) == 6):
-                        exceptional_demage += 1
+                        exceptional_damage += 1
                         self.officer = False
                     if self.size == 1:
                         self.officer = False
@@ -112,7 +112,7 @@ class Platoon:
                     self.destroyed = True
                     self.size = 0
                     self.officer = False
-            return kills, exceptional_demage, moral_check
+            return kills, exceptional_damage, moral_check
 
     class Infantry_Squad(Infantry_Unit):
 
