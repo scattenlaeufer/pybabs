@@ -43,35 +43,56 @@ class Platoon:
 
         def fire(self, unit, verbose=False):
             self.order = 'fire'
-            dificulty = 3 + self.pins
+            difficulty = 3 + self.pins
             hits = 0
             for i in range(self.size):
-                if dificulty <= 6 and randint(1, 7) >= dificulty:
+                if difficulty <= 6 and randint(1, 6) >= difficulty:
                     hits += 1
-                elif randint(1, 7) == 6 and randint(1, 7) == 6:
+                elif randint(1, 6) == 6 and randint(1, 6) == 6:
                     hits += 1
             if hits > 0:
-                kills, exceptional_demage = unit.wound(hits)
+                kills, exceptional_demage, moral_check = unit.wound(hits)
             if verbose:
                 out = self.platoon + ' ' + self.name + ' shoots at ' + unit.platoon + ' ' + unit.name + ': '
                 if hits > 0:
                     out += str(hits) + ' hits -> ' + str(kills) + ' kills'
                     if exceptional_demage > 0:
                         out += ' & ' + str(exceptional_demage) + ' exceptional demage scored'
+                    if moral_check == 1:
+                        out += ', moral check succeeded'
+                    elif moral_check == -1:
+                        out += ', moral check failed'
                     if unit.destroyed:
                         out += ', unit destroyed!'
                 else:
                     out += '0 hits'
                 print(out)
 
+        def order_test(self):
+            difficulty = self.moral_base - self.pins
+            if not self.officer:
+                difficulty -= 1
+            roll = randint(1, 6) + randint(1, 6)
+            if roll == 2:
+                self.pins = self.pins - (1 + randint(1, 6))
+                if self.pins < 0:
+                    self.pins = 0
+                return True
+            elif roll <= difficulty:
+                return True
+            else:
+                return False
+
         def wound(self, hits):
             self.pins += 1
+            start_size = self.size
             kills = 0
             exceptional_demage = 0
+            moral_check = 0
             for i in range(hits):
-                roll = randint(1, 7)
+                roll = randint(1, 6)
                 if roll >= self.wound_base:
-                    if (roll == 6 and randint(1, 7) == 6):
+                    if (roll == 6 and randint(1, 6) == 6):
                         exceptional_demage += 1
                         self.officer = False
                     if self.size == 1:
@@ -80,8 +101,16 @@ class Platoon:
                     kills += 1
                     if self.size == 0:
                         self.destroyed = True
-                        return kills, exceptional_demage
-            return kills, exceptional_demage
+                        return kills, exceptional_demage, moral_check
+            if self.size <= start_size/2:
+                if self.order_test():
+                    moral_check = 1
+                else:
+                    moral_check = -1
+                    self.destroyed = True
+                    self.size = 0
+                    self.officer = False
+            return kills, exceptional_demage, moral_check
 
     class Infantry_Squad(Infantry_Unit):
 
