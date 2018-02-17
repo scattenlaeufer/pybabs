@@ -183,6 +183,15 @@ class Platoon:
         self.infantry_squads[name] = self.Infantry_Squad(name, self.name, quality, miniature_cost, size, min_size,
                                                          max_size)
 
+    def round_reset(self):
+        self.units_without_command = []
+        for unit in self.hq.values():
+            if not unit.destroyed:
+                self.units_without_command.append(unit)
+        for unit in self.infantry_squads.values():
+            if not unit.destroyed:
+                self.units_without_command.append(unit)
+
 
 platoon1 = Platoon('Platoon 1')
 platoon1.add_hq('First Lieutenant', 'Veteran', 90, 2, 13)
@@ -197,6 +206,9 @@ print(platoon1)
 print('')
 print(platoon2)
 print('')
+
+platoon1.round_reset()
+print(platoon1.units_without_command)
 
 while not platoon2.infantry_squads['1st Squad'].destroyed:
     platoon1.infantry_squads['1st Squad'].fire(platoon2.infantry_squads['1st Squad'], True)
