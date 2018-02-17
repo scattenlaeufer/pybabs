@@ -46,12 +46,14 @@ class Platoon:
                 if not self.order_test():
                     if verbose:
                         print("{} {} failed its oder test and goes down".format(self.platoon, self.name))
-                    self.last_order = 'down'
+                    self.order = 'down'
                     return
             self.order = 'fire'
             difficulty = 3 + self.pins
             if unit.size <= 2:
                 difficulty += 1
+            if unit.order == 'down':
+                difficulty += 2
             hits = 0
             for i in range(self.size):
                 if difficulty <= 6 and randint(1, 6) >= difficulty:
@@ -109,7 +111,7 @@ class Platoon:
                     kills += 1
                     if self.size == 0:
                         self.destroyed = True
-                        return kills, exceptional_demage, moral_check
+                        return kills, exceptional_damage, moral_check
             if self.size <= start_size/2:
                 if self.order_test():
                     moral_check = 1
