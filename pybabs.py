@@ -42,6 +42,12 @@ class Platoon:
             return '{:>2}/{:>2}'.format(self.size, self.initial_size)
 
         def fire(self, unit, verbose=False):
+            if self.pins:
+                if not self.order_test():
+                    if verbose:
+                        print("{} {} failed its oder test and goes down".format(self.platoon, self.name))
+                    self.last_order = 'down'
+                    return
             self.order = 'fire'
             difficulty = 3 + self.pins
             if unit.size <= 2:
