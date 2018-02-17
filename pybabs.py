@@ -24,10 +24,18 @@ class Platoon:
             self.pins = 0
             self.name = name
             self.platoon = platoon
-            if quality in ['Inexperienced', 'Regular', 'Veteran']:
-                self.quality = quality
+            if quality == 'Inexperienced':
+                self.wound_base = 3
+                self.moral_base = 8
+            elif quality == 'Regular':
+                self.wound_base = 4
+                self.moral_base = 9
+            elif quality == 'Veteran':
+                self.wound_base = 5
+                self.moral_base = 10
             else:
                 raise WrongUnitQuality
+            self.quality = quality
             self.order = None
 
         def str_size(self):
@@ -43,11 +51,13 @@ class Platoon:
                 elif randint(1, 7) == 6 and randint(1, 7) == 6:
                     hits += 1
             if hits > 0:
-                kills = unit.wound(hits)
+                kills, exceptional_demage = unit.wound(hits)
             if verbose:
                 out = self.platoon + ' ' + self.name + ' shoots at ' + unit.platoon + ' ' + unit.name + ': '
                 if hits > 0:
                     out += str(hits) + ' hits -> ' + str(kills) + ' kills'
+                    if exceptional_demage > 0:
+                        out += ' & ' + str(exceptional_demage) + ' exceptional demage scored'
                     if unit.destroyed:
                         out += ', unit destroyed!'
                 else:
@@ -57,15 +67,21 @@ class Platoon:
         def wound(self, hits):
             self.pins += 1
             kills = 0
+            exceptional_demage = 0
             for i in range(hits):
                 roll = randint(1, 7)
-                if (self.quality == 'Inexperienced' and roll >= 3) or (self.quality == 'Regular' and roll >= 4) or (self.quality == 'Veteran' and roll >= 5):
+                if roll >= self.wound_base:
+                    if (roll == 6 and randint(1, 7) == 6):
+                        exceptional_demage += 1
+                        self.officer = False
+                    if self.size == 1:
+                        self.officer = False
                     self.size -= 1
                     kills += 1
                     if self.size == 0:
                         self.destroyed = True
-                        return kills
-            return kills
+                        return kills, exceptional_demage
+            return kills, exceptional_demage
 
     class Infantry_Squad(Infantry_Unit):
 
