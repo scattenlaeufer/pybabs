@@ -44,6 +44,8 @@ class Platoon:
         def fire(self, unit, verbose=False):
             self.order = 'fire'
             difficulty = 3 + self.pins
+            if unit.size <= 2:
+                difficulty += 1
             hits = 0
             for i in range(self.size):
                 if difficulty <= 6 and randint(1, 6) >= difficulty:
